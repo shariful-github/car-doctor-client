@@ -2,7 +2,7 @@
 const s = () => {
     return (
         <div>
-            this is home
+            <h1 className="text-5xl text-center">This is Home</h1>
         </div>
     );
 };
