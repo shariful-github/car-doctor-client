@@ -2,9 +2,22 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo.svg';
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoMdSearch } from "react-icons/io";
+import { useContext } from 'react';
+import { AuthContext } from '../providers/AuthProvider';
 
 
 const Header = () => {
+    const { user, logOut } = useContext(AuthContext);
+
+    const handleLogout = () => {
+        logOut()
+            .then(() => {
+                console.log('Sign-out successful');
+            }).catch((error) => {
+                // An error happened.
+            });
+    }
+
     return (
         <div className="navbar bg-base-100 mt-5">
             <div className="navbar-start">
@@ -13,11 +26,12 @@ const Header = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
                     </div>
                     <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                        <li><a>Home</a></li>
-                        <li><a>About</a></li>
-                        <li><a>Services</a></li>
-                        <li><a>Blog</a></li>
-                        <li><a>Contact</a></li>
+                        <li><Link to={'/'}>Home</Link></li>
+                        <li><Link>About</Link></li>
+                        <li><Link>Services</Link></li>
+                        <li><Link>Blog</Link></li>
+                        {user?.email ? <li><Link onClick={handleLogout}>Log out</Link></li> :
+                            <li><Link to={'/login'}>Login</Link></li>}
                     </ul>
                 </div>
                 <Link>
@@ -26,11 +40,12 @@ const Header = () => {
             </div>
             <div className="navbar-center hidden lg:flex mr-24">
                 <ul className="menu menu-horizontal px-1">
-                    <li className='font-semibold text-lg mr-5'><a>Home</a></li>
-                    <li className='font-semibold text-lg mr-5'><a>About</a></li>
-                    <li className='font-semibold text-lg mr-5'><a>Services</a></li>
-                    <li className='font-semibold text-lg mr-5'><a>Blog</a></li>
-                    <li className='font-semibold text-lg mr-5'><a>Contact</a></li>
+                    <li className='font-semibold text-lg mr-5'><Link to={'/'}>Home</Link></li>
+                    <li className='font-semibold text-lg mr-5'><Link>About</Link></li>
+                    <li className='font-semibold text-lg mr-5'><Link>Services</Link></li>
+                    <li className='font-semibold text-lg mr-5'><Link>Blog</Link></li>
+                    {user?.email ? <li className='font-semibold text-lg mr-5'><Link onClick={handleLogout}>Log out</Link></li> :
+                        <li className='font-semibold text-lg mr-5'><Link to={'/login'}>Login</Link></li>}
                 </ul>
             </div>
             <div className="navbar-end">
