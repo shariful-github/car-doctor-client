@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ServiceCard from './ServiceCard';
+import { DataContext } from '../../providers/DataProvider';
 
 const Services = () => {
     const [services, setServices] = useState([]);
+    const {serviceSection} = useContext(DataContext);
 
     useEffect(() => {
         fetch('http://localhost:5000/services')
@@ -14,7 +16,7 @@ const Services = () => {
     }, [])
 
     return (
-        <div>
+        <div ref={serviceSection}>
             <div className='text-center'>
                 <h5 className='font-bold text-lg text-red-500'>Services</h5>
                 <h1 className='text-5xl font-bold'>Our Service Area</h1>

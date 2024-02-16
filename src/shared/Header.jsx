@@ -4,10 +4,12 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoMdSearch } from "react-icons/io";
 import { useContext } from 'react';
 import { AuthContext } from '../providers/AuthProvider';
+import { DataContext } from '../providers/DataProvider';
 
 
 const Header = () => {
     const { user, logOut } = useContext(AuthContext);
+    const {scrollToServices} = useContext(DataContext);
 
     const handleLogout = () => {
         logOut()
@@ -27,7 +29,7 @@ const Header = () => {
                     </div>
                     <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                         <li><Link to={'/'}>Home</Link></li>
-                        <li><Link>Services</Link></li>
+                        <li><Link >Services</Link></li>
                         {user?.email ?
                             <>
                                 <li><Link to={'/bookings'}>My Bookings</Link></li>
@@ -43,7 +45,7 @@ const Header = () => {
             <div className="navbar-center hidden lg:flex mr-24">
                 <ul className="menu menu-horizontal px-1">
                     <li className='font-semibold text-lg'><Link to={'/'}>Home</Link></li>
-                    <li className='font-semibold text-lg'><Link>Services</Link></li>
+                    <li className='font-semibold text-lg'><Link onClick={() => scrollToServices()}>Services</Link></li>
                     {user?.email ?
                         <>
                             <li className='font-semibold text-lg'><Link to={'/bookings'}>My Bookings</Link></li>
