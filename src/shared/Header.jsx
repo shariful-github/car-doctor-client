@@ -27,10 +27,12 @@ const Header = () => {
                     </div>
                     <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                         <li><Link to={'/'}>Home</Link></li>
-                        <li><Link>About</Link></li>
                         <li><Link>Services</Link></li>
-                        <li><Link>Blog</Link></li>
-                        {user?.email ? <li><Link onClick={handleLogout}>Log out</Link></li> :
+                        {user?.email ?
+                            <>
+                                <li><Link to={'/bookings'}>My Bookings</Link></li>
+                                <li><button onClick={handleLogout}>Log out</button></li>
+                            </> :
                             <li><Link to={'/login'}>Login</Link></li>}
                     </ul>
                 </div>
@@ -40,12 +42,14 @@ const Header = () => {
             </div>
             <div className="navbar-center hidden lg:flex mr-24">
                 <ul className="menu menu-horizontal px-1">
-                    <li className='font-semibold text-lg mr-5'><Link to={'/'}>Home</Link></li>
-                    <li className='font-semibold text-lg mr-5'><Link>About</Link></li>
-                    <li className='font-semibold text-lg mr-5'><Link>Services</Link></li>
-                    <li className='font-semibold text-lg mr-5'><Link>Blog</Link></li>
-                    {user?.email ? <li className='font-semibold text-lg mr-5'><Link onClick={handleLogout}>Log out</Link></li> :
-                        <li className='font-semibold text-lg mr-5'><Link to={'/login'}>Login</Link></li>}
+                    <li className='font-semibold text-lg'><Link to={'/'}>Home</Link></li>
+                    <li className='font-semibold text-lg'><Link>Services</Link></li>
+                    {user?.email ?
+                        <>
+                            <li className='font-semibold text-lg'><Link to={'/bookings'}>My Bookings</Link></li>
+                            <li className='font-semibold text-lg'><button onClick={handleLogout}>Log out</button></li>
+                        </> :
+                        <li className='font-semibold text-lg'><Link to={'/login'}>Login</Link></li>}
                 </ul>
             </div>
             <div className="navbar-end">
