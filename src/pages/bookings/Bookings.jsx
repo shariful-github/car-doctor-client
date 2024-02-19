@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../providers/AuthProvider';
 import BookingRow from './BookingRow';
+import axios from 'axios';
 
 const Bookings = () => {
     const { user } = useContext(AuthContext);
@@ -44,9 +45,8 @@ const Bookings = () => {
     }
 
     useEffect(() => {
-        fetch(`http://localhost:5000/bookings?email=${user.email}`)
-            .then(res => res.json())
-            .then(data => setBookings(data))
+        axios.get(`http://localhost:5000/bookings?email=${user.email}`, {withCredentials: true})
+        .then(res => setBookings(res.data))
     })
 
 
