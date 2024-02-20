@@ -56,7 +56,8 @@ const Login = () => {
                             </div>
                             <p className='text-center my-3'>
                                 Don't have an account?
-                                <Link className='ml-1 text-orange-600 font-bold' to={'/signup'}>Sign Up</Link>
+                                {/* <Link className='ml-1 text-orange-600 font-bold' to={'/signup'}>Sign Up</Link> */}
+                                <Link to={{ pathname: '/signup', state: 'wowwo' }}>Sign Up</Link>
                             </p>
                         </form>
                     </div>

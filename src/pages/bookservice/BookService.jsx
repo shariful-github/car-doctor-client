@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../providers/AuthProvider';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const BookService = () => {
     const { user } = useContext(AuthContext);
     const service = useLoaderData();
     const { _id, price, img, title } = service;
+    const navigate = useNavigate();
 
     const handleService = (event) => {
         event.preventDefault();
@@ -24,17 +27,18 @@ const BookService = () => {
             service_title: title,
         }
 
-        fetch('http://localhost:5000/bookings', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(booking)
-        })
-            .then(res => res.json())
+        axios.post('http://localhost:5000/bookings', booking)
             .then(result => {
-                if (result.insertedId) {
-                    alert('Your service has been successfully booked!');
+                if (result.data.insertedId) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "You have successfully booked the service.",
+                        icon: "success",
+                        confirmButtonText: "My Bookings",
+                    })
+                        .then(() => {
+                            navigate('/bookings');
+                        })
                 }
             })
 

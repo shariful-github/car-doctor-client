@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../providers/AuthProvider';
+import Swal from 'sweetalert2';
 
 const Signup = () => {
-
-    const {createUser} = useContext(AuthContext);
+    const { createUser } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleSignUp = event => {
         event.preventDefault();
@@ -15,14 +16,22 @@ const Signup = () => {
         const password = form.password.value;
 
         createUser(email, password)
-        .then(userCredential => {
-            const user = userCredential.user;
-            console.log(user);
-        })
-        .catch(error => {
-            const errorMessage = error.message;
-            console.log(errorMessage);
-        })
+            .then(userCredential => {
+                const user = userCredential.user;
+                Swal.fire({
+                    title: "Success!",
+                    text: "You have successfully signed up.",
+                    icon: "success",
+                    confirmButtonText: "Login",
+                })
+                .then(() =>{
+                    navigate('/login');
+                })
+            })
+            .catch(error => {
+                const errorMessage = error.message;
+                console.log(errorMessage);
+            })
     }
 
     return (

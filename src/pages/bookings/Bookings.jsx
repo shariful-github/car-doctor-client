@@ -2,40 +2,52 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../providers/AuthProvider';
 import BookingRow from './BookingRow';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Bookings = () => {
     const { user } = useContext(AuthContext);
     const [bookings, setBookings] = useState([]);
 
     const handleDelete = (id) => {
-        const proceed = confirm('Are you sure you want to delete?');
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`http://localhost:5000/bookings/${id}`)
+                    .then(result => {
+                        if (result.data.deletedCount === 1) {
+                            const remainingBookings = bookings.filter(booking => booking._id !== id);
+                            setBookings(remainingBookings);
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
+                            });
+                        }
+                    })
 
-        if (proceed) {
-            fetch(`http://localhost:5000/bookings/${id}`, {
-                method: 'DELETE'
-            })
-                .then(res => res.json())
-                .then(result => {
-                    if (result.deletedCount === 1) {
-                        const remainingBookings = bookings.filter(booking => booking._id !== id);
-                        setBookings(remainingBookings);
-                    }
-                })
-        }
+            }
+        });
     }
 
     const handleConfirmBooking = (id) => {
         fetch(`http://localhost:5000/bookings/${id}`, {
             method: 'PATCH',
-            headers:{
+            headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify({status: 'confirmed'})
+            body: JSON.stringify({ status: 'confirmed' })
         })
             .then(res => res.json())
             .then(result => {
                 console.log(result)
-                if(result.modifiedCount > 0){
+                if (result.modifiedCount > 0) {
                     const notConfirmed = bookings.filter(booking => booking._id !== id);
                     const confirmed = bookings.find(booking => booking._id === id);
                     confirmed.status = 'confirmed';
@@ -45,8 +57,8 @@ const Bookings = () => {
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/bookings?email=${user.email}`, {withCredentials: true})
-        .then(res => setBookings(res.data))
+        axios.get(`http://localhost:5000/bookings?email=${user.email}`, { withCredentials: true })
+            .then(res => setBookings(res.data))
     })
 
 
