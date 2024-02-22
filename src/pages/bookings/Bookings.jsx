@@ -3,10 +3,12 @@ import { AuthContext } from '../../providers/AuthProvider';
 import BookingRow from './BookingRow';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const Bookings = () => {
     const { user } = useContext(AuthContext);
     const [bookings, setBookings] = useState([]);
+    const axiosSecure = useAxiosSecure();
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -19,14 +21,14 @@ const Bookings = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/bookings/${id}`)
+                axiosSecure.delete(`/bookings/${id}`)
                     .then(result => {
                         if (result.data.deletedCount === 1) {
                             const remainingBookings = bookings.filter(booking => booking._id !== id);
                             setBookings(remainingBookings);
                             Swal.fire({
                                 title: "Deleted!",
-                                text: "Your file has been deleted.",
+                                text: "The service has been deleted.",
                                 icon: "success"
                             });
                         }
@@ -37,29 +39,21 @@ const Bookings = () => {
     }
 
     const handleConfirmBooking = (id) => {
-        fetch(`http://localhost:5000/bookings/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({ status: 'confirmed' })
-        })
-            .then(res => res.json())
+        axiosSecure.patch(`/bookings/${id}`, { status: 'confirmed' })
             .then(result => {
-                console.log(result)
-                if (result.modifiedCount > 0) {
-                    const notConfirmed = bookings.filter(booking => booking._id !== id);
+                if (result.data.modifiedCount > 0) {
+                    const AllBookings = [...bookings];
                     const confirmed = bookings.find(booking => booking._id === id);
                     confirmed.status = 'confirmed';
-                    setBookings([...notConfirmed, confirmed]);
+                    setBookings(AllBookings);
                 }
             })
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/bookings?email=${user.email}`, { withCredentials: true })
-            .then(res => setBookings(res.data))
-    })
+        axiosSecure.get(`/bookings?email=${user.email}`)
+            .then(res => { setBookings(res.data) })
+    }, [])
 
 
     return (

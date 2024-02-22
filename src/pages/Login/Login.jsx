@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const Login = () => {
     const location = useLocation();
-    const {signIn} = useContext(AuthContext);
+    const { signIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleLogin = event => {
@@ -18,7 +18,7 @@ const Login = () => {
         signIn(email, password)
             .then(userCredential => {
                 const loggedInUser = userCredential.user;
-                navigate(location?.state? location.state : '/');
+                navigate(location?.state ? location.state : '/');
             })
             .catch(error => {
                 const errorMessage = error.message;
@@ -56,8 +56,7 @@ const Login = () => {
                             </div>
                             <p className='text-center my-3'>
                                 Don't have an account?
-                                {/* <Link className='ml-1 text-orange-600 font-bold' to={'/signup'}>Sign Up</Link> */}
-                                <Link to={{ pathname: '/signup', state: 'wowwo' }}>Sign Up</Link>
+                                <Link className='ml-1 text-orange-600 font-bold' to={'/signup'}>Sign Up</Link>
                             </p>
                         </form>
                     </div>

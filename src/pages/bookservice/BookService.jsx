@@ -1,14 +1,26 @@
-import React, { useContext } from 'react';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../providers/AuthProvider';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const BookService = () => {
+    const axiosSecure = useAxiosSecure();
     const { user } = useContext(AuthContext);
-    const service = useLoaderData();
+    const [service, setService] = useState({});
     const { _id, price, img, title } = service;
+    const { id } = useParams();
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        axiosSecure.get(`/services/${id}`)
+            .then(res => {
+                setService(res.data);
+                setLoading(false);
+            })
+    }, [axiosSecure, id])
+
 
     const handleService = (event) => {
         event.preventDefault();
@@ -27,7 +39,7 @@ const BookService = () => {
             service_title: title,
         }
 
-        axios.post('http://localhost:5000/bookings', booking)
+        axiosSecure.post('/bookings', booking)
             .then(result => {
                 if (result.data.insertedId) {
                     Swal.fire({
@@ -69,7 +81,7 @@ const BookService = () => {
                     <label className="label">
                         <span className="label-text">Due Amount</span>
                     </label>
-                    <input type="text" name='dueAmount' defaultValue={'$ ' + price} placeholder="Due Amount" className="input input-bordered" required readOnly />
+                    <input type="text" name='dueAmount' value={loading ? 'Loading...' : ('$ ' + price)} placeholder="Due Amount" className="input input-bordered" required readOnly />
                 </div>
             </div>
             <button className="mt-5 btn btn-error text-white bg-orange-600">Order Confirm</button>

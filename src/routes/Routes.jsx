@@ -19,7 +19,7 @@ const router = createBrowserRouter([
             {
                 path: '/bookservice/:id',
                 element: <PrivateRoutes><BookService></BookService></PrivateRoutes>,
-                loader: ({params}) => fetch(`http://localhost:5000/services/${params.id}`)
+                // loader: ({params}) => fetch(`http://localhost:5000/services/${params.id}`)
             },
             {
                 path: 'bookings',
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
     {
         path: '/signup',
         element: <Signup></Signup>
-    },  
+    },
 ]);
 
 export default router;
