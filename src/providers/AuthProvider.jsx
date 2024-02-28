@@ -34,13 +34,13 @@ const AuthProvider = ({ children }) => {
             const UserEmail = currentUser?.email || user?.email;
             const loggedUser = { email: UserEmail };
             if (currentUser) {
-                axiosSecure.post('/jwt', loggedUser, { withCredentials: true })
+                axiosSecure.post('/jwt', loggedUser)
                     .then(res => {
                         const data = res.data
                     })
             }
             else {
-                axiosSecure.post('/logout', loggedUser, { withCredentials: true })
+                axiosSecure.post('/logout', loggedUser)
                     .then(res => console.log(res.data))
             }
         })
