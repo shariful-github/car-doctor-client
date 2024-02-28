@@ -8,11 +8,19 @@ const Services = () => {
     const { serviceSection } = useContext(DataContext);
     const [asc, setAsc] = useState(true);
     const axiosSecure = useAxiosSecure();
+    const [searchKey, SetSearchKey] = useState('');
 
     useEffect(() => {
-        axiosSecure.get(`/services?sort=${asc ? 'asc' : 'desc'}`)
+        axiosSecure.get(`/services?sort=${asc ? 'asc' : 'desc'}&searchKey=${searchKey}`)
             .then(res => setServices(res.data))
-    }, [asc])
+    }, [axiosSecure, asc, searchKey])
+
+    const handleSearch = event => {
+        event.preventDefault();
+        SetSearchKey(event.target.searchBox.value);
+    }
+
+    console.log(searchKey);
 
     return (
         <div ref={serviceSection}>
@@ -21,13 +29,22 @@ const Services = () => {
                 <h1 className='text-5xl font-bold'>Our Service Area</h1>
                 <p>the majority have suffered alteration in some form, by injected humour, or randomised <br /> words which don't look even slightly believable. </p>
             </div>
-            <div className='text-center'>
+            <div className='flex justify-center mt-5 gap-3'>
                 <button
                     onClick={() => setAsc(!asc)}
-                    className="btn btn-active btn-secondary mt-5">
+                    className="btn btn-active btn-secondary">
                     Price: {asc ? 'high to low' : 'low to high'}
                 </button>
+                <input
+                    onChange={e => {
+                        setTimeout(() => SetSearchKey(e.target.value), 1000);
+                    }}
+                    type="text"
+                    placeholder='search service'
+                    className='p-2 border-2 border-pink-500 focus:outline-sky-600 font-semibold'
+                />
             </div>
+
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-10'>
                 {
                     services.map(service =>
